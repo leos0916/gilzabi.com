@@ -1,0 +1,110 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+import AdBanner from '../components/AdBanner.astro';
+import AffiliateCTA from '../components/AffiliateCTA.astro';
+
+type Props = CollectionEntry<'blog'>['data'];
+
+const { title, description, pubDate, updatedDate, heroImage, category = '경제' } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+		<style>
+			main {
+				width: calc(100% - 2em);
+				max-width: 100%;
+				margin: 0;
+			}
+			.hero-image {
+				width: 100%;
+			}
+			.hero-image img {
+				display: block;
+				margin: 0 auto;
+				border-radius: 12px;
+				box-shadow: var(--box-shadow);
+			}
+			.prose {
+				width: 720px;
+				max-width: calc(100% - 2em);
+				margin: auto;
+				padding: 1em;
+				color: rgb(var(--gray-dark));
+			}
+			.title {
+				margin-bottom: 1em;
+				padding: 1em 0;
+				text-align: center;
+				line-height: 1;
+			}
+			.title h1 {
+				margin: 0 0 0.5em 0;
+			}
+			.date {
+				margin-bottom: 0.5em;
+				color: rgb(var(--gray));
+			}
+			.category-tag {
+				display: inline-block;
+				background: #6366f1;
+				color: white;
+				padding: 0.2rem 0.8rem;
+				border-radius: 20px;
+				font-size: 0.8rem;
+				font-weight: bold;
+				margin-bottom: 1rem;
+			}
+			.last-updated-on {
+				font-style: italic;
+			}
+		</style>
+	</head>
+
+	<body>
+		<Header />
+		<main>
+			<article>
+				<div class="hero-image">
+					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+				</div>
+				<div class="prose">
+					<div class="title">
+						<div class="category-tag">{category}</div>
+						<div class="date">
+							<FormattedDate date={pubDate} />
+							{
+								updatedDate && (
+									<div class="last-updated-on">
+										Last updated on <FormattedDate date={updatedDate} />
+									</div>
+								)
+							}
+						</div>
+						<h1>{title}</h1>
+						<hr />
+					</div>
+					
+					<AdBanner position="top" slot="TOP_AD" />
+					
+					<!-- 본문 중간 광고 배치 -->
+					<AdBanner position="middle" slot="MIDDLE_AD" />
+					
+					<slot />
+					
+					<AdBanner position="bottom" slot="BOTTOM_AD" />
+					
+					<!-- 쿠팡 파트너스 CTA 컴포넌트 추가 -->
+					<AffiliateCTA url="https://coupa.ng/bXxxxx" title="블로그 관련 추천 아이템 확인하기" />
+				</div>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>
